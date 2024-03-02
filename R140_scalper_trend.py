@@ -10,6 +10,12 @@ import os
 ### 거래할 코인 symbol
 coin = "KRW-XRP" 
 
+### 시작금액
+start_money = 150000
+
+### 현금이 N% 남으면 마지막 지정가 매도주문
+Last_order_limit = 10
+
 ### API 키 파일 참조
 with open("key.txt") as f:
     access_key, secret_key = [line.strip() for line in f.readlines()]
@@ -282,8 +288,6 @@ def ORDER_SELL_LIMIT(ticker, *args):    # 지정가 매도 주문 결과 리턴 
 def run(chk_run):
     if chk_run == 0:
         ### 초기변수 설정
-        start_money = 150000
-        Last_order_limit = 10                               # 현금이 N% 남으면 마지막 지정가 매도주문
         rise_chk = 0
         chk_sell_order = 0
         chk_15m_timer = 0
