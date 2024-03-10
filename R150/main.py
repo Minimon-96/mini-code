@@ -68,11 +68,6 @@ def run(chk_run):
             time.sleep(10)
             continue
 
-        ### 보유 현금액이 min_cash 미만이 되면 일괄매도 진행
-        cur_cash = GET_CASH(coin)
-        if cur_cash < min_cash:     
-            log("DG","Cash on hand is too low.")
-
         ### 현재 코인의 가격이 0원인 경우 업비트와의 통신에 문제가 있다고 판단 하여 10초뒤 재실행
         cur_price = GET_CUR_PRICE(coin) 
         if cur_price == 0:
@@ -80,18 +75,22 @@ def run(chk_run):
             time.sleep(10)
             continue
 
+        one_tick = calculate_tick_unit(cur_price)
+
         cur_coin = GET_QUAN_COIN(coin) 
         if cur_coin * cur_price <= one_tick:
             sell_price = 0.0
 
-        one_tick = calculate_tick_unit(cur_price)
+        ### 보유 현금액이 min_cash 미만이 되면 일괄매도 진행
+        min_cash = round((cur_cash + (cur_coin * cur_price)) * last_sell_order/100)  # 최초 금액 대비 (10%) 가 되면 매수중지
+        if cur_cash < min_cash:     
+            log("DG","Cash on hand is too low.")
 
         if chk_15m_timer != 0:
             if int(time.strftime("%M")) % 15 == 0:  # 매시 15분 마다 타이머 초기화
                 log("INFO","Check Timer reset")
                 chk_15m_timer = 0
 
-        min_cash = round((cur_cash + (cur_coin * cur_price)) * last_sell_order/100)  # 최초 금액 대비 (10%) 가 되면 매수중지
         if cur_cash > min_cash:
             try:
                 wallet = round(cur_cash + (cur_coin * cur_price))
