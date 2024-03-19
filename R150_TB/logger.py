@@ -7,6 +7,7 @@ import os
 LogFormatter = logging.Formatter('%(message)s')
 today_ymd=datetime.today().strftime("%Y%m%d")
 
+# mynote 테스트
 # 로그 파일명 지정 (00시 기준으로 '파일명.날짜' 형식으로 백업됨)
 logFile="scalper"
 logPath="D:\\mygit\\coin\\coin_study\\tb\\trace" # window
