@@ -305,6 +305,7 @@ def run(chk_run):
         buy_price = 0.0
         sell_amount = 0.0
         sell_price = 0.0
+        min_cash = 0.0
 
         cur_price = GET_CUR_PRICE(coin)                     # 현재 코인 가격 조회
         one_tick = calculate_tick_unit(cur_price)           # 호가(최소 변동폭) 단위 조회
