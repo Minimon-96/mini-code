@@ -357,7 +357,9 @@ def run(chk_run):
             continue
 
         one_tick = calculate_tick_unit(cur_price)
-
+        buy_amount = calculate_trade_unit(cur_cash)
+        log("INFO", "ONE TICK : "+str(one_tick), "BUY AMOUNT :"+str(buy_amount))
+        
         cur_coin = GET_QUAN_COIN(coin) 
         if cur_coin * cur_price <= one_tick:
             sell_price = 0.0
