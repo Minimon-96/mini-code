@@ -305,6 +305,8 @@ def run(chk_run):
         buy_price = 0.0
         sell_amount = 0.0
         sell_price = 0.0
+        buy_volume = 0.0
+        min_cash = 0.0
 
         cur_price = GET_CUR_PRICE(coin)                     # 현재 코인 가격 조회
         one_tick = calculate_tick_unit(cur_price)           # 호가(최소 변동폭) 단위 조회
@@ -356,7 +358,9 @@ def run(chk_run):
             continue
 
         one_tick = calculate_tick_unit(cur_price)
-
+        buy_amount = calculate_trade_unit(cur_cash)
+        log("INFO", "ONE TICK : "+str(one_tick), "BUY AMOUNT :"+str(buy_amount))
+        
         cur_coin = GET_QUAN_COIN(coin) 
         if cur_coin * cur_price <= one_tick:
             sell_price = 0.0
@@ -391,9 +395,10 @@ def run(chk_run):
 
                 log("DG","CUR_PRICE : " + str(cur_price), "BUY_PRICE  : " + str(buy_price))
                 if cur_price < buy_price:   # 가격이 지정한 매수가 밑으로 내려오면 매수 진행
-                    if chk_15m_timer > 3:   # 15분 동안 매수 3회 제한
+                    if chk_15m_timer > 2:   # 15분 동안 매수 3회 제한
                         buy_price = cur_price - (one_tick * 3)
                         log("DG","Purchased more than 3 times in 15 minutes.")
+                        res = 0
                     else:
                         res = ORDER_BUY_MARKET(coin, buy_amount)
                     time.sleep(1)
@@ -403,7 +408,8 @@ def run(chk_run):
                         log("INFO","Check Timer : " + str(chk_15m_timer))
                         buy_price = cur_price - (one_tick * 3)
                         sell_price = round(GET_BUY_AVG(coin) * 1.03)    # 평균 매수가 +n% 가격을 매도가로 설정
-                        log("DG", "BUY ORDER " + str(coin)+ " : " + str(cur_price), "AMOUNT : " + str(buy_amount))
+                        buy_volume = buy_amount/cur_price
+                        log("DG", "BUY ORDER " + str(coin)+ " : " + str(cur_price), "VOLUME : " + str(buy_volume))
 
                 log("DG","CUR_PRICE : " + str(cur_price), "SELL_PRICE : " + str(sell_price))
                 if cur_price >= sell_price and (cur_coin * cur_price) > 6000:   # 가격이 매도가보다 높고, 매도 금액이 최소 주문 단위인 6000원 초과인 경우 매도 진행

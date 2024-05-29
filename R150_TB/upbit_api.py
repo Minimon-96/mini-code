@@ -67,7 +67,7 @@ def GET_MARKET_TREND(ticker, price, days_short, days_long):
         price_gap = price * 0.01    # 현재가격에 1%인 값을 price_gap으로 설정
         df = fetch_data(lambda: pybithumb.get_ohlcv(ticker_bithumb))    # pybithumb 라이브러리를 사용하여 암호화폐의 OHLCV 데이터 수신
         ma_short = df['close'].rolling(window=days_short).mean()    # 일정 기간(days_short) 동안의 종가 평균값(ma)을 계산
-        last_ma_short = ma_short[-2] + price_gap    # (days_short) 기간 동안의 종가 평균값(ma)에 price_gap을 더한 값을 last_ma로 설정
+        last_ma_short = ma_short.iloc[-2] + price_gap    # (days_short) 기간 동안의 종가 평균값(ma)에 price_gap을 더한 값을 last_ma로 설정
         trend = None    # 추세(trend)를 초기화
         if price > last_ma_short: 
             trend = "up"    # 현재 가격(price)이 이전 기간의 종가 평균값(last_ma)보다 큰 경우 추세를 "up"으로 설정
@@ -76,7 +76,7 @@ def GET_MARKET_TREND(ticker, price, days_short, days_long):
 
 
         ma_long = df['close'].rolling(window=days_long).mean()
-        last_ma_long = round((ma_long[-2] + price_gap)*1.2)   # 이전 기간의 종가 평균값(ma_long)에 price_gap을 더한 값에 1.2를 곱하여 last_ma_long으로 설정
+        last_ma_long = round((ma_long.iloc[-2] + price_gap)*1.2)   # 이전 기간의 종가 평균값(ma_long)에 price_gap을 더한 값에 1.2를 곱하여 last_ma_long으로 설정
 
         if price > last_ma_long:
             trend="run-up"  # 현재 가격(price)이 이전 기간의 종가 평균값(last_ma_long)보다 큰 경우 추세를 "run-up"으로 설정
