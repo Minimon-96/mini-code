@@ -316,14 +316,15 @@ def run(chk_run):
             time.sleep(10)
             return 0
         
-        if cur_coin * cur_price >= one_tick:                                    #
-            sell_price = round(GET_BUY_AVG(coin) * 1.03)    # 현재 보유 코인이 2개 이상인 경우 매도 가격 체크
-            log("DG","Initial Sell Price : "+str(sell_price), "Current Quntity Coin : "+str(cur_coin))
-        else:                                               # 
-            sell_price = 0.0         
-        
         buy_price = cur_price - (one_tick * 3)              # 최초 매수가격은 현재 가격에서 3틱을 뺀 값으로 지정
         buy_amount = calculate_trade_unit(cur_cash)         # 보유 현금에 비례하여 1회당 매수 금액 지정
+
+        if cur_coin * cur_price >= buy_amount:
+            sell_price = round(GET_BUY_AVG(coin) * 1.03)
+            log("DG","Initial Sell Price : "+str(sell_price), "Current Quntity Coin : "+str(cur_coin))
+        else:
+            sell_price = 0.0         
+        
         if buy_amount == 0:
             log("DG","calculate_trade_unit() Error")
             time.sleep(10)
